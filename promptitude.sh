@@ -312,6 +312,7 @@ function _print_git_state_flags() {
 function promptitude() {
 
     # display indicators
+    local ADD_NEWLINE=true
     local SHOW_SHELL_LEVEL=true
     local SHOW_USERHOST=true
     local SHOW_DIRECTORY=1
@@ -350,6 +351,14 @@ function promptitude() {
     do
         case $1 in
         __NOOP__)
+            shift
+            ;;
+        --add-newline)
+            ADD_NEWLINE=true
+            shift
+            ;;
+        --no-newline)
+            ADD_NEWLINE=false
             shift
             ;;
         --show-shell-level)
@@ -452,6 +461,7 @@ function promptitude() {
             echo "Configure BASH prompt"
             echo " "
             echo "Information Options:"
+            echo "  --no-newline              ... do not add a newline before prompt"
             echo "  --no-shell-level          ... do not show shell nesting level"
             echo "  --show-shell-level        ... show shell nesting level"
             echo "  --no-user-host            ... do not show user and hostname"
@@ -592,12 +602,20 @@ function promptitude() {
         PROMPTSTR="${PROMPTSTR}\$(_print_git_info | sed -e 's/^\(.*\)%%%%\(.*\)%%%%\(:\)*\(.*\)$/$PROMPT_COLOR$SEP$GIT_BRANCH_COLOR\1$PROMPT_COLOR$SEP$GIT_HEAD_COLOR\2$PROMPT_COLOR\3$GIT_STATE_COLOR\4/')"
     fi
 
+    # add a newline
+    if [[ $ADD_NEWLINE == true ]]
+    then
+        local PS_NEWLINE="\n"
+    else
+        local PS_NEWLINE=""
+    fi
+
     # final
     if [[ -z $PROMPTSTR ]]
     then
-        PROMPTSTR="\$ "
+        PROMPTSTR="$PS_NEWLINE\$ "
     else
-        PROMPTSTR="\n$CLEAR$SHLVLTAG${PROMPT_COLOR}[$CLEAR$PROMPTSTR$PROMPT_COLOR]$WRAP$WHICHPYTHON$PROMPT_COLOR\$$CLEAR "
+        PROMPTSTR="${PS_NEWLINE}$CLEAR$SHLVLTAG${PROMPT_COLOR}[$CLEAR$PROMPTSTR$PROMPT_COLOR]$WRAP$WHICHPYTHON$PROMPT_COLOR\$$CLEAR "
     fi
 
     # Set.
