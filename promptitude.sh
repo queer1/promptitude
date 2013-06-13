@@ -462,6 +462,7 @@ function promptitude() {
             echo " "
             echo "Information Options:"
             echo "  --no-newline              ... do not add a newline before prompt"
+            echo "  --add-newline             ... add a newline before prompt"
             echo "  --no-shell-level          ... do not show shell nesting level"
             echo "  --show-shell-level        ... show shell nesting level"
             echo "  --no-user-host            ... do not show user and hostname"
